@@ -1,0 +1,56 @@
+﻿
+script(id="tweet-marker", type="text/x-handlebars-template")
+    div(class="tweetWin")
+
+        div(class='header')
+            a(target='_blank', href='http://twitter.com/{{user.screen_name}}')
+
+                div(class='author')
+                    img(src='{{user.profile_image_url}}')
+                
+                    div(class='author_name')
+                        span(class='name') {{user.name}}
+                        br                    
+                        span(class='handle') @{{user.screen_name}}
+
+            div(class='follow')
+                a(href="https://twitter.com/{{user.screen_name}}", class="twitter-follow-button", data-show-count="false", data-lang="en") Follow
+
+
+        {{#if media_url}}
+        div(class='photo')
+            a(target='_blank', href='http://twitter.com/{{user.screen_name}}/status/{{id_str}}')
+                img(src='{{media_url}}')
+        {{/if}}
+
+        a(target='_blank', href='http://twitter.com/{{user.screen_name}}/status/{{id_str}}')
+            div(class='copy') 
+                {{#if in_reply_to_screen_name}}
+                @{{in_reply_to_screen_name}}
+                {{/if}}
+
+                {{text}}
+                br
+                br
+                at {{created_at_str}}
+
+        div(class='hr')
+
+        div(class='footer')
+            div(class='counts')
+                span(class='bold') {{retweet_count}} 
+                span retweets &nbsp;&nbsp;&nbsp;&nbsp;
+                span(class='bold') {{favorite_count}} 
+                span favorites 
+
+            div(class='actions')
+                a(target='_blank', href='https://twitter.com/intent/tweet?in_reply_to={{id_str}}')
+                    span(class='reply')
+                    
+                a(target='_blank', href='https://twitter.com/intent/favorite?tweet_id={{id_str}}')
+                    span(class='favorite')
+                    
+                a(target='_blank', href='https://twitter.com/intent/retweet?tweet_id={{id_str}}')
+                    span(class='retweet')
+         
+

@@ -1,0 +1,16 @@
+{
+  "name": "twittermap_azure",
+  "version": "0.0.0",
+  "description": "twittermap_azure",
+  "main": "app.js",
+  "author": {
+    "name": "aschafer",
+    "email": ""
+  },
+  "dependencies": {
+    "express": "^3.4.4",
+    "jade": "*",
+    "stylus": "*",
+    "socket.io": "^1.0.6"
+  }
+}
