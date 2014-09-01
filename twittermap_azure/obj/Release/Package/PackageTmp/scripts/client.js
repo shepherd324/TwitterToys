@@ -4,7 +4,18 @@
 { var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id))
     { js = d.createElement(s); js.id = id; js.src = "//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
 
- 
+//GA
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-54332320-1', 'auto');
+ga('send', 'pageview');
+
+
+
+
 TwitMap = (function () {
     
     var utils = {
@@ -34,16 +45,16 @@ TwitMap = (function () {
     };
 
     var app = function (opts) {
-        
-        this.tweets = [];
-        this.infoWindows = [];
-        this.tweetTemplate = Handlebars.compile(opts.handlebarsMarkerTemplate);
-        this.map = {};
         this.mapOptions = opts.googleMapOptions;
         this.socketIoHost = opts.socketIoHost;
-        this.intervalHandle = null;
-        this.interval = opts.interval || 5000;
+        this.tweetTemplate = Handlebars.compile(opts.handlebarsMarkerTemplate);
         this.maxInfoWindows = opts.maxInfoWindows || 20;
+        this.interval = opts.interval || 5000;
+        this.localhostCheck();
+        this.tweets = [];
+        this.infoWindows = [];
+        this.map = {};
+        this.intervalHandle = null;
         var me = this;
         this.totalTweets = 0;
         google.maps.event.addDomListener(
@@ -59,6 +70,9 @@ TwitMap = (function () {
     app.prototype.localhostCheck = function () {
         if (document.location.hostname != "localhost") {
             $('#localhost_window').hide();
+        } else {
+            
+            this.socketIoHost = 'http://localhost:1337';
         }
     };
     
@@ -70,14 +84,16 @@ TwitMap = (function () {
     };    
     
     app.prototype.addTweet = function (tweet) {        
-        if (tweet.entities && tweet.entities.media && tweet.entities.media.length > 0) {
-            tweet.media_url = tweet.entities.media[0].media_url;
-        }        
-        tweet.created_at_str = TwitMap.utils.formatCreateDate(tweet.create_date);
-        tweet.text_parsed = TwitMap.utils.parseLinks(tweet.text);        
-        this.tweets.push(tweet);
-        this.totalTweets++;
-        $('.tweet_count').html(this.totalTweets + " total<br/>" + this.tweets.length + " in the queue<br/>" + this.infoWindows.length + " infowindows");
+        if (this.tweets.length < 100) {
+            if (tweet.entities && tweet.entities.media && tweet.entities.media.length > 0) {
+                tweet.media_url = tweet.entities.media[0].media_url;
+            }
+            tweet.created_at_str = TwitMap.utils.formatCreateDate(tweet.create_date);
+            tweet.text_parsed = TwitMap.utils.parseLinks(tweet.text);
+            this.tweets.push(tweet);
+            this.totalTweets++;
+            $('.tweet_count').html(this.totalTweets + " total<br/>" + this.tweets.length + " in the queue<br/>" + this.infoWindows.length + " infowindows");
+        }
     };
     app.prototype.showNext = function () {
         if (this.tweets.length > 0) {
@@ -121,7 +137,7 @@ $(function () {
     
     var newApp = new TwitMap.app({
         handlebarsMarkerTemplate: $("#tweet-marker").html(),
-        socketIoHost: 'http://localhost:1337',
+        socketIoHost: 'http://twittermap.azurewebsites.net/',
         googleMapOptions: {
             center: new google.maps.LatLng(-74.04441833496094, 40.70172388214517),
             zoom: 6,

@@ -31,10 +31,12 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="scripts\bootstrap-tagsinput\bootstrap-tagsinput.min.js" />
     <Compile Include="scripts\client.js" />
     <Compile Include="app.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\user.js" />
+    <Compile Include="scripts\jquery-tagsinput\jquery-tagsinput.min.js" />
     <Content Include="package.json" />
     <Content Include="public\images\everything-spritev2.png" />
     <Content Include="public\images\favorite.png" />
@@ -47,6 +49,8 @@
     <Content Include="public\stylesheets\style.styl" />
     <Content Include="README.md" />
     <None Include="twittermap.pubxml" />
+    <Content Include="scripts\bootstrap-tagsinput\bootstrap-tagsinput.css" />
+    <Content Include="scripts\jquery-tagsinput\jquery.tagsinput.css" />
     <Content Include="stylesheets\style.css" />
     <Content Include="views\templates.jade" />
     <Content Include="views\index.jade" />
@@ -55,6 +59,8 @@
   <ItemGroup>
     <Folder Include="bin\" />
     <Folder Include="scripts\" />
+    <Folder Include="scripts\bootstrap-tagsinput\" />
+    <Folder Include="scripts\jquery-tagsinput\" />
     <Folder Include="stylesheets\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
