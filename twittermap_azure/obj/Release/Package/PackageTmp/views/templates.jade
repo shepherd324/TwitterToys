@@ -25,10 +25,6 @@ script(id="tweet-marker", type="text/x-handlebars-template")
 
         a(target='_blank', href='http://twitter.com/{{user.screen_name}}/status/{{id_str}}')
             div(class='copy') 
-                {{#if in_reply_to_screen_name}}
-                @{{in_reply_to_screen_name}}
-                {{/if}}
-
                 {{text}}
                 br
                 br

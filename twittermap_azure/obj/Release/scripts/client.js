@@ -51,6 +51,7 @@ TwitMap = (function () {
         this.maxInfoWindows = opts.maxInfoWindows || 20;
         this.interval = opts.interval || 5000;
         this.localhostCheck();
+        this.socket = null;
         this.tweets = [];
         this.infoWindows = [];
         this.map = {};
@@ -70,21 +71,40 @@ TwitMap = (function () {
     app.prototype.localhostCheck = function () {
         if (document.location.hostname != "localhost") {
             $('#localhost_window').hide();
+            $('.debug').hide();
         } else {
             
             this.socketIoHost = 'http://localhost:1337';
         }
     };
     
-    app.prototype.start = function () {        
-        var socket = io.connect(this.socketIoHost);
+    app.prototype.start = function () {
+        this.socket = io.connect(this.socketIoHost);
         var me = this;        
-        socket.on('twitter', this.addTweet.bind(this));
+        this.socket.on('twitter', this.addTweet.bind(this));
+        this.socket.on('keywords_changed', this.keywordsChanged.bind(this));
         this.intervalHandle = setInterval(this.showNext.bind(this), this.interval);
-    };    
+        $('#btn_add_keywords').click(this.addKeywords.bind(this));
+        $('#keywords').tagsInput({});
+        this.addKeywords();
+    };
+    
+    app.prototype.addKeywords = function () {
+        this.socket.emit('keywords', $('#keywords').val().split(','));
+    };
+    
+    app.prototype.keywordsChanged = function (keywords) {
+        $('#keywords').importTags('');
+        $('#keywords').importTags(keywords);
+        this.tweets = [];
+        this.totalTweets = 0;
+        for (var i = 0; i < this.infoWindows.length; i++) {
+            this.infoWindows[i].close();
+        }
+    };
     
     app.prototype.addTweet = function (tweet) {        
-        if (this.tweets.length < 100) {
+        if (this.tweets.length < 50) {
             if (tweet.entities && tweet.entities.media && tweet.entities.media.length > 0) {
                 tweet.media_url = tweet.entities.media[0].media_url;
             }
@@ -92,14 +112,15 @@ TwitMap = (function () {
             tweet.text_parsed = TwitMap.utils.parseLinks(tweet.text);
             this.tweets.push(tweet);
             this.totalTweets++;
-            $('.tweet_count').html(this.totalTweets + " total<br/>" + this.tweets.length + " in the queue<br/>" + this.infoWindows.length + " infowindows");
+            $('.debug').html(this.totalTweets + " total, " + this.tweets.length + " in the queue, " + this.infoWindows.length + " infowindows");
+            $('.count').html(this.totalTweets + ' found');
         }
     };
     app.prototype.showNext = function () {
         if (this.tweets.length > 0) {
             this.placeInfoWindow(this.tweets[0]);
             //once the tweet is displayed we can remove it from the queue
-            if (this.tweets.length > 1) {
+            if (this.tweets.length > 0) {
                 this.tweets = this.tweets.splice(1, this.tweets.length - 1);
             }
         }
@@ -135,17 +156,21 @@ TwitMap = (function () {
 
 $(function () {
     
-    var newApp = new TwitMap.app({
+    var gmapStyle = [{ "featureType": "water", "stylers": [{ "color": "#021019" }] },{ "featureType": "landscape", "stylers": [{ "color": "#08304b" }] },{ "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#0c4152" },{ "lightness": 5 }] },{ "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [{ "color": "#000000" }] },{ "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{ "color": "#0b434f" },{ "lightness": 25 }] },{ "featureType": "road.arterial", "elementType": "geometry.fill", "stylers": [{ "color": "#000000" }] },{ "featureType": "road.arterial", "elementType": "geometry.stroke", "stylers": [{ "color": "#0b3d51" },{ "lightness": 16 }] },{ "featureType": "road.local", "elementType": "geometry", "stylers": [{ "color": "#000000" }] },{ "elementType": "labels.text.fill", "stylers": [{ "color": "#ffffff" }] },{ "elementType": "labels.text.stroke", "stylers": [{ "color": "#000000" },{ "lightness": 13 }] },{ "featureType": "transit", "stylers": [{ "color": "#146474" }] },{ "featureType": "administrative", "elementType": "geometry.fill", "stylers": [{ "color": "#000000" }] },{ "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [{ "color": "#144b53" },{ "lightness": 14 },{ "weight": 1.4 }] }];
+
+    var newApp = new TwitMap.app( {
         handlebarsMarkerTemplate: $("#tweet-marker").html(),
         socketIoHost: 'http://twittermap.azurewebsites.net/',
         googleMapOptions: {
             center: new google.maps.LatLng(-74.04441833496094, 40.70172388214517),
             zoom: 6,
-            mapTypeId: google.maps.MapTypeId.HYBRID,
-            tilt: 45
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            styles: gmapStyle
         },
         interval: 7000,
-        maxInfoWindows: 12
+        maxInfoWindows: 8
     });
     newApp.start();
+
+    
 });

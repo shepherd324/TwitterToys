@@ -51,12 +51,20 @@ var twit = new twitter({
     access_token_secret: 'K7N2vKeVVptU8q5k4utJPheSliX7tc6YfgMusGpQeO3Nd'
 });
 
-io.on('connection', function (socket) {
-    console.log('a user connected');
-});
 
 var profanity = ['fuck', 'shit', ' ass ', ' sex ', 'asshole', 'jackass', 'bitch', 'dick', 'douche', 'dick', 'suck', 'boner', 'skank', 'nuts', 'cock', 'jackhole', 'boobs', 'pecker', 'wanker', 'bloody', 'cunt', ' cum ', 'spunk', 'fag', 'funbags', 'melons', 'cans', 'jugs', 'jizz', 'pussy', 'sex', 'tits', 'boobs', 'aids', 'retard', 'penis', 'vagina', 'whore', 'slut'];
-var sexual = ['fuck me', 'fuck him', ' ass ', ' sex ', ' dick', 'cock ', 'boobs', 'funbags', 'melons', 'cans', 'jugs', 'jizz', 'pussy', 'sex', ' tits', 'boobs', ' penis', 'vagina', ' slut'];
+var profanity2 = ['fuck me', 'fuck him', ' ass ', ' sex ', ' dick', 'cock ', 'boobs', 'funbags', 'melons', 'cans', 'jugs', 'jizz', 'pussy', 'sex', ' tits', 'boobs', ' penis', 'vagina', ' slut'];
+
+var currentList = [];
+currentList = profanity;
+
+io.on('connection', function (socket) {
+    console.log('a user connected');
+    socket.on('keywords', function (data) {
+        currentList = data;
+        io.sockets.emit('keywords_changed', data.join([separator = ',']));
+    });
+});
 
 function memberOf(arr, str) {
     for (var i = 0; i < arr.length; i++) {
@@ -75,13 +83,16 @@ twit.stream('statuses/filter',
     //{ 'track': 'something' },  //filter
         
     function (stream) {
-    stream.on(
-        'data', 
-        function (data) {
-            if (data.coordinates && memberOf(profanity, data.text)) {
+        stream.on('data', function (data) {
+            if (data.coordinates && memberOf(currentList, data.text)) {
                 io.sockets.emit('twitter', data);
-                console.log(data);
+                console.log(data.text);
             }
-    });
+        });
+        stream.on('end', function (data) {
+            console.log('stream ended');
+        });
+        stream.on('destroy', function (data) {
+            console.log('stream destroyed');
+        });
 });
-

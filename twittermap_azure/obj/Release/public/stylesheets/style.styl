@@ -1,4 +1,7 @@
-﻿html {
+﻿html, body {
+	font-family: 'Roboto', 'Ubuntu', 'Gotham Narrow SSm','Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+html {
     height: 100%;
 }
 
@@ -25,22 +28,38 @@ hr {
 }
 
 #menu {
+	color:#fff;
     position: absolute;
     right: 0px;
     top: 0px;
     background-color: #000;
-	opacity: .75;
+	opacity: .9;
     width: 400px;
-    height: 200px;
+    height: 200px;9
     z-index: 999;
     overflow: hidden;
-    font-size: 14px;
-	padding:4px;
+    font-size: 10px;
+	padding:8px;
+	border-top-left-radius:0;
+	border-top-right-radius:0;
+	border-bottom-right-radius:0;
+	border-bottom-left-radius:4px;
 	
 	-webkit-animation: bounce 2s ease-out;
 	-moz-animation: bounce 800ms ease-out;
 	-o-animation: bounce 2s ease-out;
 	animation: bounce 2s ease-out;
+}
+
+#menu .title {
+	color:#fff;
+	font-weight:400;
+	font-size:24px;
+	text-transform:uppercase;
+}
+
+#keywords {
+	width:150px;
 }
 
 #localhost_window {
@@ -75,7 +94,7 @@ hr {
 	border-radius: 4px;
 }
 
-.tweetWin a, .tweetWin a:visited {
+.tweetWin a, .tweetWin a:visited, .tweetWin a:hover {
 	color:#000;
 	text-decoration:none;
 }
@@ -166,7 +185,8 @@ hr {
     background: url('/images/everything-spritev2.png') -96px 0;
 }
 
-.tweet_count { font-size: 24px; color:#fff; }
+.debug { font-size: 10px; color:#fff; bottom:0px; position:absolute; right:0px; }
+#menu .count{ font-size: 18px; color:#fff; padding-left:10px; }
 
 /* Webkit, Chrome and Safari */
 

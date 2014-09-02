@@ -82,6 +82,7 @@ TwitMap = (function () {
         this.socket = io.connect(this.socketIoHost);
         var me = this;        
         this.socket.on('twitter', this.addTweet.bind(this));
+        this.socket.on('keywords_changed', this.keywordsChanged.bind(this));
         this.intervalHandle = setInterval(this.showNext.bind(this), this.interval);
         $('#btn_add_keywords').click(this.addKeywords.bind(this));
         $('#keywords').tagsInput({});
@@ -90,6 +91,11 @@ TwitMap = (function () {
     
     app.prototype.addKeywords = function () {
         this.socket.emit('keywords', $('#keywords').val().split(','));
+    };
+    
+    app.prototype.keywordsChanged = function (keywords) {
+        $('#keywords').importTags('');
+        $('#keywords').importTags(keywords);
         this.tweets = [];
         this.totalTweets = 0;
         for (var i = 0; i < this.infoWindows.length; i++) {
@@ -162,7 +168,7 @@ $(function () {
             styles: gmapStyle
         },
         interval: 7000,
-        maxInfoWindows: 12
+        maxInfoWindows: 8
     });
     newApp.start();
 

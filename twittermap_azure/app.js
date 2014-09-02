@@ -61,7 +61,8 @@ currentList = profanity;
 io.on('connection', function (socket) {
     console.log('a user connected');
     socket.on('keywords', function (data) {
-        currentList = data;       
+        currentList = data;
+        io.sockets.emit('keywords_changed', data.join([separator = ',']));
     });
 });
 
