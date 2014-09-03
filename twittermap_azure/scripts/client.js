@@ -1,8 +1,8 @@
 ﻿
 //twitter widget
-!function (d, s, id)
-{ var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id))
-    { js = d.createElement(s); js.id = id; js.src = "//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
+//!function (d, s, id)
+//{ var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id))
+//    { js = d.createElement(s); js.id = id; js.src = "//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
 
 //GA
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -85,8 +85,15 @@ TwitMap = (function () {
         this.socket.on('keywords_changed', this.keywordsChanged.bind(this));
         this.intervalHandle = setInterval(this.showNext.bind(this), this.interval);
         $('#btn_add_keywords').click(this.addKeywords.bind(this));
-        $('#keywords').tagsInput({});
+        $('#keywords').tagsInput({
+            height:'40px',
+            width: '800px'                                        
+        });
         this.addKeywords();
+        
+        $('#menu_bar').css({ left: -1 * $(window).width() });
+        $('#menu_bar').show();
+        $('#menu_bar').transition({ x: $(window).width() }, 1000, 'easeInQuad');
     };
     
     app.prototype.addKeywords = function () {
@@ -101,8 +108,9 @@ TwitMap = (function () {
         for (var i = 0; i < this.infoWindows.length; i++) {
             this.infoWindows[i].close();
         }
+        this.updateCount();
     };
-    
+        
     app.prototype.addTweet = function (tweet) {        
         if (this.tweets.length < 50) {
             if (tweet.entities && tweet.entities.media && tweet.entities.media.length > 0) {
@@ -112,10 +120,19 @@ TwitMap = (function () {
             tweet.text_parsed = TwitMap.utils.parseLinks(tweet.text);
             this.tweets.push(tweet);
             this.totalTweets++;
-            $('.debug').html(this.totalTweets + " total, " + this.tweets.length + " in the queue, " + this.infoWindows.length + " infowindows");
-            $('.count').html(this.totalTweets + ' found');
+            this.updateCount();            
+            
+            if (this.tweets.length == 1 && this.infoWindows.length == 0) {  //don't wait for the interval to show if it's the first tweet
+                this.showNext();
+            }
         }
     };
+    
+    app.prototype.updateCount = function () {
+        $('.count').html(this.totalTweets + ' found');
+        $('.debug').html(this.totalTweets + " total, " + this.tweets.length + " in the queue, " + this.infoWindows.length + " infowindows");
+    };
+
     app.prototype.showNext = function () {
         if (this.tweets.length > 0) {
             this.placeInfoWindow(this.tweets[0]);
@@ -132,11 +149,12 @@ TwitMap = (function () {
         var iwOpts = {
             content: this.tweetTemplate(tweet),
             disableAutoPan: true,
-            position: coords
+            position: coords,
+            zIndex:this.infoWindows.length+1
         };
         var iw = new google.maps.InfoWindow(iwOpts);
         iw.open(this.map);
-        twttr.widgets.load()
+        //twttr.widgets.load()
         
         this.map.panTo(coords);
         this.infoWindows.push(iw);

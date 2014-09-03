@@ -37,6 +37,7 @@
     <Compile Include="routes\index.js" />
     <Compile Include="routes\user.js" />
     <Compile Include="scripts\jquery-tagsinput\jquery-tagsinput.min.js" />
+    <Compile Include="scripts\jquery.transit.min.js" />
     <Content Include="package.json" />
     <Content Include="public\images\everything-spritev2.png" />
     <Content Include="public\images\favorite.png" />
@@ -46,7 +47,9 @@
     <Content Include="public\images\reply_hover.png" />
     <Content Include="public\images\retweet.png" />
     <Content Include="public\images\retweet_hover.png" />
+    <Content Include="public\images\twitterbird.png" />
     <Content Include="public\stylesheets\style.styl" />
+    <Content Include="public\stylesheets\twittermap.css" />
     <Content Include="README.md" />
     <None Include="twittermap.pubxml" />
     <Content Include="scripts\bootstrap-tagsinput\bootstrap-tagsinput.css" />

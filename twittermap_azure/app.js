@@ -83,6 +83,7 @@ twit.stream('statuses/filter',
     //{ 'track': 'something' },  //filter
         
     function (stream) {
+
         stream.on('data', function (data) {
             if (data.coordinates && memberOf(currentList, data.text)) {
                 io.sockets.emit('twitter', data);

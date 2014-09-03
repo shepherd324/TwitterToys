@@ -3,19 +3,17 @@ script(id="tweet-marker", type="text/x-handlebars-template")
     div(class="tweetWin")
 
         div(class='header')
-            a(target='_blank', href='http://twitter.com/{{user.screen_name}}')
 
                 div(class='author')
-                    img(src='{{user.profile_image_url}}')
+                    a(target='_blank', href='http://twitter.com/{{user.screen_name}}')
+                        img(src='{{user.profile_image_url}}')
                 
                     div(class='author_name')
-                        span(class='name') {{user.name}}
-                        br                    
-                        span(class='handle') @{{user.screen_name}}
-
-            div(class='follow')
-                a(href="https://twitter.com/{{user.screen_name}}", class="twitter-follow-button", data-show-count="false", data-lang="en") Follow
-
+                          
+                        a(target='_blank', href='http://twitter.com/{{user.screen_name}}', class='twitter-mention-button') @{{user.screen_name}}
+                        br        
+                        a(target='_blank', href='http://twitter.com/{{user.screen_name}}')
+                            span(class='name') {{user.name}}
 
         {{#if media_url}}
         div(class='photo')
@@ -23,21 +21,24 @@ script(id="tweet-marker", type="text/x-handlebars-template")
                 img(src='{{media_url}}')
         {{/if}}
 
-        a(target='_blank', href='http://twitter.com/{{user.screen_name}}/status/{{id_str}}')
-            div(class='copy') 
+        div(class='copy')         
+            a(target='_blank', href='http://twitter.com/{{user.screen_name}}/status/{{id_str}}')
                 {{text}}
                 br
-                br
-                at {{created_at_str}}
+                //br
+                //put down by the favorites/retweets counts because those are always 0
+                //at {{created_at_str}}
 
         div(class='hr')
 
         div(class='footer')
             div(class='counts')
-                span(class='bold') {{retweet_count}} 
-                span retweets &nbsp;&nbsp;&nbsp;&nbsp;
-                span(class='bold') {{favorite_count}} 
-                span favorites 
+                at {{created_at_str}}
+                //hiding now because they are always 0
+                //span(class='bold') {{retweet_count}} 
+                //span retweets &nbsp;&nbsp;&nbsp;&nbsp;
+                //span(class='bold') {{favorite_count}} 
+                //span favorites 
 
             div(class='actions')
                 a(target='_blank', href='https://twitter.com/intent/tweet?in_reply_to={{id_str}}')
