@@ -35,7 +35,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/users', user.list);
+app.get('/photos', routes.photos);
 
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
@@ -85,10 +85,18 @@ twit.stream('statuses/filter',
     function (stream) {
 
         stream.on('data', function (data) {
-            if (data.coordinates && memberOf(currentList, data.text)) {
-                io.sockets.emit('twitter', data);
-                console.log(data.text);
+            if(memberOf(currentList, data.text))
+            {
+                if (data.coordinates) {
+                    io.sockets.emit('twitter', data);
+                        //console.log('map: ' + data.text);
+                }
+                if (data.entities && data.entities.media && data.entities.media.length > 0) {
+                    io.sockets.emit('twitter_media', data);
+                    console.log('photo: ' + data.text);
+                }
             }
+            
         });
         stream.on('end', function (data) {
             console.log('stream ended');

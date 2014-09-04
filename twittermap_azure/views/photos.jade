@@ -1,7 +1,7 @@
 ﻿extends layout
 
 block head
-    link(rel='stylesheet', href='/stylesheets/twittermap.css')
+    link(rel='stylesheet', href='/stylesheets/twitterphotos.css')
 
 block content        
 
@@ -13,10 +13,9 @@ block content
             button(class='btn  btn-warning', id='btn_add_keywords') Map Them
             span(class='count')
 
-    div(id='map-canvas')
-
-    include ./map_templates.jade
+    div(id='content') 
+            
+    include ./photo_templates.jade
 
 block scripts    
-    script(src='//maps.googleapis.com/maps/api/js?key=AIzaSyDpBJAHqGvrYHV2F5dn5R7niN1Z3ng1FMw&sensor=false')
-    script(src='/scripts/mapApp.js')
+    script(src='/scripts/photoApp.js')

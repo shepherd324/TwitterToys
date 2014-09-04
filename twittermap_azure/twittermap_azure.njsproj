@@ -31,8 +31,10 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="routes\photos.js" />
     <Compile Include="scripts\bootstrap-tagsinput\bootstrap-tagsinput.min.js" />
-    <Compile Include="scripts\client.js" />
+    <Compile Include="scripts\photoApp.js" />
+    <Compile Include="scripts\mapApp.js" />
     <Compile Include="app.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\user.js" />
@@ -49,13 +51,16 @@
     <Content Include="public\images\retweet_hover.png" />
     <Content Include="public\images\twitterbird.png" />
     <Content Include="public\stylesheets\style.styl" />
+    <Content Include="public\stylesheets\twitterphotos.css" />
     <Content Include="public\stylesheets\twittermap.css" />
     <Content Include="README.md" />
     <None Include="twittermap.pubxml" />
     <Content Include="scripts\bootstrap-tagsinput\bootstrap-tagsinput.css" />
     <Content Include="scripts\jquery-tagsinput\jquery.tagsinput.css" />
     <Content Include="stylesheets\style.css" />
-    <Content Include="views\templates.jade" />
+    <Content Include="views\photos.jade" />
+    <Content Include="views\photo_templates.jade" />
+    <Content Include="views\map_templates.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
   </ItemGroup>
